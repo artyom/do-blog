@@ -1,0 +1,4 @@
+<!DOCTYPE html>
+<meta charset="utf-8"><title>{{.Title}}</title>
+{{template "extra"}}<nav><a href="/">Index</a></nav>
+<article>{{.EntryTextHTML}}</article>

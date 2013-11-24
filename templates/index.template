@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<meta charset="utf-8"><title>Index</title>
+{{template "extra"}}<h1>Index</h1>
+<ul>{{range .Items}}
+<li><a href="{{.Filename}}">{{if .Title}}{{.Title}}{{else}}{{short .Teaser 15}}&hellip;{{end}}</a></li>
+{{end}}</ul>
