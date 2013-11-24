@@ -54,7 +54,7 @@ func (post *BlogPost) bake() error {
 	post.CreationDate = post.CreationDate.In(loc)
 
 	post.EntryText = html.UnescapeString(post.EntryText)
-	post.EntryTextHTML = template.HTML(blackfriday.MarkdownCommon([]byte(post.EntryText)))
+	post.EntryTextHTML = template.HTML(Markdown([]byte(post.EntryText)))
 	doc, err := html5.Parse(strings.NewReader(string(post.EntryTextHTML)))
 	if err != nil {
 		return err
@@ -95,4 +95,25 @@ func NewPostFromFile(filename string) (post *BlogPost, err error) {
 		return nil, err
 	}
 	return post, nil
+}
+
+func Markdown(input []byte) []byte {
+	// set up the HTML renderer
+	htmlFlags := 0
+	htmlFlags |= blackfriday.HTML_USE_SMARTYPANTS
+	htmlFlags |= blackfriday.HTML_SMARTYPANTS_FRACTIONS
+	htmlFlags |= blackfriday.HTML_SMARTYPANTS_LATEX_DASHES
+	htmlFlags |= blackfriday.HTML_SKIP_SCRIPT
+	renderer := blackfriday.HtmlRenderer(htmlFlags, "", "")
+
+	// set up the parser
+	extensions := 0
+	extensions |= blackfriday.EXTENSION_FOOTNOTES
+	extensions |= blackfriday.EXTENSION_NO_INTRA_EMPHASIS
+	extensions |= blackfriday.EXTENSION_TABLES
+	extensions |= blackfriday.EXTENSION_AUTOLINK
+	extensions |= blackfriday.EXTENSION_STRIKETHROUGH
+	extensions |= blackfriday.EXTENSION_SPACE_HEADERS
+
+	return blackfriday.Markdown(input, renderer, extensions)
 }
