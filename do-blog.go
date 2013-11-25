@@ -39,14 +39,21 @@ func main() {
 	funcMap := template.FuncMap{
 		"short": short,
 	}
-	postTemplate = template.Must(template.ParseFiles(
+	var err error
+	postTemplate, err = template.ParseFiles(
 		filepath.Join(tplPath, "post.template"),
 		filepath.Join(tplPath, "extra.template"),
-	))
-	indexTemplate = template.Must(template.New("index.template").Funcs(funcMap).ParseFiles(
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+	indexTemplate, err = template.New("index.template").Funcs(funcMap).ParseFiles(
 		filepath.Join(tplPath, "index.template"),
 		filepath.Join(tplPath, "extra.template"),
-	))
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	if err := os.MkdirAll(outPath, 0755); err != nil {
 		log.Fatal(err)
